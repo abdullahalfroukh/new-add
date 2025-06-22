@@ -32,25 +32,26 @@ def check_new_ads():
     soup = BeautifulSoup(response.content, "html.parser")
     ads = soup.find_all("a", class_="sc-dznXNo fqwxvA")
     new_ads = []
-    
+
     for ad in ads:
         title = ad.get_text(strip=True)
         link = "https://jo.opensooq.com" + ad.get("href")
         if link not in seen_ads:
             seen_ads.add(link)
             new_ads.append((title, link))
-    
+
     return new_ads
 
-if __name__ == "__main__":
+if _name_ == "_main_":
     while True:
         print("🔄 جاري التحقق من الإعلانات الجديدة...")
         new_ads = check_new_ads()
         if new_ads:
             for title, link in new_ads:
-                send_email("📢 إعلان جديد على السوق المفتوح", f"{title}
-{link}")
+                email_body = f"{title}\n{link}"
+                send_email("📢 إعلان جديد على السوق المفتوح", email_body)
                 print(f"📬 إعلان جديد: {title}")
         else:
             print("❌ لا يوجد إعلانات جديدة هذه المرة.")
         time.sleep(CHECK_INTERVAL)
+
